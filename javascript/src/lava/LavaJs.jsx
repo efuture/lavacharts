@@ -1,26 +1,23 @@
 /* jshint undef: true, unused: true */
 /* globals window, document, console, google, module, require */
 
+import Chart from './Chart.jsx'
+import Dashboard from './Dashboard.jsx'
+
 /**
- * Lava module
+ * LavaJs module
  *
  * @module    lava/Lava
  * @author    Kevin Hill <kevinkhill@gmail.com>
  * @copyright (c) 2015, KHill Designs
  * @license   MIT
  */
-//module.exports = (function() {
-'use strict';
-
 const Q = require('q');
 const _ = require('lodash');
 const util = require('util');
 const EventEmitter = require('events');
 const GOOGLE_LOADER_URL = 'https://www.gstatic.com/charts/loader.js';
 
-/**
- * Lava class
- */
 export default class LavaJs extends EventEmitter
 {
     constructor() {
@@ -52,7 +49,14 @@ export default class LavaJs extends EventEmitter
          *
          * @type {Class.<Chart>}
          */
-        this.Chart = require('./Chart.js');
+        this.Chart = Chart;
+
+        /**
+         * Loading Dashboard class into LavaJs
+         *
+         * @type {Class.<Dashboard>}
+         */
+        this.Dashboard = Dashboard;
 
         /**
          * Array of charts stored in the module.
@@ -61,13 +65,6 @@ export default class LavaJs extends EventEmitter
          * @private
          */
         this._charts = [];
-
-        /**
-         * Loading Dashboard class into LavaJs
-         *
-         * @type {Class.<Dashboard>}
-         */
-        this.Dashboard =  require('./Dashboard.js');
 
         /**
          * Array of dashboards stored in the module.
@@ -486,9 +483,4 @@ export default class LavaJs extends EventEmitter
         return deferred.promise;
     }
 
-} //End of Lava class
-
-/**
- * Inherit from the EventEmitter
- */
-//util.inherits(Lava, EventEmitter);
+}
