@@ -11,8 +11,11 @@
    replace = require('gulp-replace'),
       argv = require('yargs').array('browsers').argv,
     source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+sourcemaps = require('gulp-sourcemaps'),
 browserify = require('browserify'),
   stripify = require('stripify'),
+  babelify = require('babelify'),
       exec = require('child_process').exec,
      spawn = require('child_process').spawn,
   execSync = require('child_process').execSync,
@@ -25,10 +28,10 @@ var renderOutputDir = './javascript/phantomjs/renders';
 function compile(prod, watch) {
     var bundler = browserify({
         debug: true,
-        entries: ['./javascript/src/lava.entry.js'],
+        entries: ['./javascript/src/lava.entry.jsx'],
         cache: {},
         packageCache: {}
-    });
+    }).transform(babelify, {presets: ["es2015"]});
 
     if (watch) {
         var bundler = watchify(bundler);
@@ -52,7 +55,10 @@ function compile(prod, watch) {
                 this.emit('end');
             })
             .pipe(source('lava.js'))
+            .pipe(gulpif(prod, buffer()))
+            .pipe(gulpif(prod, sourcemaps.init({loadMaps: true})))
             .pipe(gulpif(prod, streamify(uglify())))
+            .pipe(gulpif(prod, sourcemaps.write('./')))
             .pipe(gulp.dest('javascript/dist'));
     }
 

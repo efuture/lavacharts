@@ -4,7 +4,7 @@
 (function(){
     "use strict";
 
-    var $chart = lava.createChart('<chartType>', '<chartLabel>');
+    var $chart = window.lava.createChart('<chartType>', '<chartLabel>');
 
     $chart.init = function() {
         $chart.package = '<chartPackage>';
@@ -36,8 +36,8 @@
             return $chart.promises.configure.promise;
         };
 
-        lava.emit('ready', $chart);
+        window.lava.emit('ready', $chart);
     };
 
-    lava.store($chart);
-})();
+    window.lava.store($chart);
+}());
