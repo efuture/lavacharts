@@ -26,9 +26,8 @@ browserify = require('browserify'),
 var renderOutputDir = './javascript/phantomjs/renders';
 
 function compile(prod, watch) {
-    var bundler = browserify({
+    var bundler = browserify('./javascript/src/lava.entry.jsx', {
         debug: true,
-        entries: ['./javascript/src/lava.entry.jsx'],
         cache: {},
         packageCache: {}
     }).transform(babelify, {presets: ["es2015"]});
