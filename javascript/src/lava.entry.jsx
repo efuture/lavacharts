@@ -10,7 +10,6 @@ import ready from 'document-ready'
 (function() {
     "use strict";
 
-
     this.lava = new LavaJs;
 
     ready(() => {
