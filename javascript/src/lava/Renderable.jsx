@@ -1,5 +1,8 @@
 /* jshint undef: true */
-/* globals document, google, require, module */
+/* globals document, google, require */
+
+import * as errors from './Errors.jsx'
+import * as _ from 'lodash'
 
 /**
  * Chart module
@@ -7,10 +10,10 @@
  * @class     Chart
  * @module    lava/Chart
  * @author    Kevin Hill <kevinkhill@gmail.com>
- * @copyright (c) 2015, KHill Designs
+ * @copyright (c) 2017, KHill Designs
  * @license   MIT
  */
-const _ = require('lodash');
+//const _ = require('lodash');
 
 /**
  * Renderable Class
@@ -24,7 +27,7 @@ const _ = require('lodash');
 export default class Renderable
 {
     constructor(type, label) {
-        this._errors   = require('./Errors.js');
+        this._errors   = errors;
         this.label     = label;
         this.type      = type;
         this.element   = null;

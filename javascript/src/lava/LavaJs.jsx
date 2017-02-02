@@ -1,15 +1,16 @@
 /* jshint undef: true, unused: true */
-/* globals window, document, console, google, module, require */
+/* globals window, document, console, google, require */
 
 import Chart from './Chart.jsx'
 import Dashboard from './Dashboard.jsx'
+import * as Errors from './Errors.jsx'
 
 /**
  * LavaJs module
  *
  * @module    lava/Lava
  * @author    Kevin Hill <kevinkhill@gmail.com>
- * @copyright (c) 2015, KHill Designs
+ * @copyright (c) 2017, KHill Designs
  * @license   MIT
  */
 const Q = require('q');
@@ -27,8 +28,17 @@ export default class LavaJs extends EventEmitter
          * Setting the debug flag
          *
          * @type {boolean}
+         * @private
          */
         this._debug = true;
+
+        /**
+         * Error functions to be thrown
+         *
+         * @type {object.<Function>}
+         * @private
+         */
+        this._errors = Errors;
 
         /**
          * JSON object of config items.
@@ -81,13 +91,19 @@ export default class LavaJs extends EventEmitter
          * @private
          */
         this._readyCallback = _.noop();
+    }
 
-        /**
-         * Error definitions for the module.
-         *
-         * @private
-         */
-        this._errors = require('./Errors.js');
+    /**
+     * Logging function for debugging the rendering process
+     *
+     * Toggleable with the _debug attribute
+     *
+     * @param {string} msg
+     */
+    log (msg) {
+        if (this._debug) {
+            console.log(msg);
+        }
     }
 
     /**
@@ -97,34 +113,34 @@ export default class LavaJs extends EventEmitter
      * @public
      */
     init() {
-        console.log('lava.js init');
+        this.log('lava.js init');
 
         this.emit('initialized');
 
         var readyCount = 0;
 
         this.on('ready', renderable => {
-            console.log(renderable.uuid() + ' ready');
+            this.log(renderable.uuid() + ' ready');
 
             readyCount++;
 
             if (readyCount == this._getRenderables().length) {
-                console.log('loading google');
+                this.log('loading google');
 
                 this._loadGoogle().then(() => {
                     return this._mapRenderables(renderable => {
-                        console.log('configuring ' + renderable.uuid());
+                        this.log('configuring ' + renderable.uuid());
 
                         return renderable.configure();
                     });
                 }).then(() => {
                     return this._mapRenderables(renderable => {
-                        console.log('rendering ' + renderable.uuid());
+                        this.log('rendering ' + renderable.uuid());
 
                         return renderable.render();
                     });
                 }).then(() => {
-                    console.log('lava.js ready');
+                    this.log('lava.js ready');
 
                     this._readyCallback();
                 });
@@ -139,10 +155,10 @@ export default class LavaJs extends EventEmitter
      * @public
      */
     run() {
-        console.log('lava.js running');
+        this.log('lava.js running');
 
         this._forEachRenderable(renderable => {
-            console.log('init ' + renderable.uuid());
+            this.log('init ' + renderable.uuid());
 
             renderable.init();
         });
@@ -466,8 +482,8 @@ export default class LavaJs extends EventEmitter
                 var packages = $lava._getPackages();
                 var locale   = $lava._getLocale();
 
-                console.log('google loaded');
-                console.log(packages);
+                this.log('google loaded');
+                this.log(packages);
 
                 google.charts.load('current', {
                     packages: packages,

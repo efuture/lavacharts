@@ -9,7 +9,7 @@ import Renderable from './Renderable.jsx'
  * @class     Dashboard
  * @module    lava/Dashboard
  * @author    Kevin Hill <kevinkhill@gmail.com>
- * @copyright (c) 2015, KHill Designs
+ * @copyright (c) 2017, KHill Designs
  * @license   MIT
  */
 const Q = require('q');
